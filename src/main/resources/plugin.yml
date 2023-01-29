@@ -1,0 +1,5 @@
+name: RoiLionUHC
+version: '${project.version}'
+main: roilionuhc.roilionuhc.RoiLionUHC
+depend: [ KasterborousUHC ]
+authors: [ Supercomete ]
