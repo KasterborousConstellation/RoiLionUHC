@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import roilionuhc.roilionuhc.RLTeams;
-import roilionuhc.roilionuhc.RLUHC;
 import roilionuhc.roilionuhc.RoiLionUHC;
 
 import java.util.Arrays;
@@ -19,6 +18,7 @@ import java.util.UUID;
 
 public class Banzai extends Role implements Trigger_WhileAnyTime, Trigger_WhileNight {
     public boolean passed = false;
+    public boolean used=false;
     public Banzai(UUID owner) {
         super(owner);
     }
@@ -76,6 +76,7 @@ public class Banzai extends Role implements Trigger_WhileAnyTime, Trigger_WhileN
                     }
                 }
             }
+
         }else{
             RoiLionUHC.api.getPotionEffectProvider().applyPotionEffect(player,new KTBSEffect(PotionEffectType.DAMAGE_RESISTANCE,0,20*4));
         }

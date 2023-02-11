@@ -6,6 +6,7 @@ import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.role.CoolDown;
 import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
+import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.role.RoleModifier.HasAdditionalInfo;
 import fr.supercomete.head.role.Triggers.Trigger_OnInteractWithUUIDItem;
 import fr.supercomete.head.role.Triggers.Trigger_WhileAnyTime;
@@ -82,7 +83,7 @@ public class Pumba extends Role implements HasAdditionalInfo,Trigger_WhileAnyTim
                 RoiLionUHC.api.getPotionEffectProvider().applyPotionEffect(player,new KTBSEffect(PotionEffectType.DAMAGE_RESISTANCE,1,11*20));
                 for(Player other : Bukkit.getOnlinePlayers()){
                     if(RoiLionUHC.api.getPlayerHelper().IsPlayerInGame(other.getUniqueId())){
-                        if(other instanceof Timon){
+                        if(RoleHandler.getRoleOf(other) instanceof Timon){
                             RoiLionUHC.api.getPotionEffectProvider().applyPotionEffect(player,new KTBSEffect(PotionEffectType.INCREASE_DAMAGE,0,2*60*20));
                             other.sendMessage("§7Pumba vient d'activer §aHakuna Matata§7 vous avez donc l'effet force pendant 2minutes.");
                         }

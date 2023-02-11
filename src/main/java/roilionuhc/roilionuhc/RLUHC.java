@@ -10,13 +10,19 @@ import fr.supercomete.head.GameUtils.GameMode.Modes.Mode;
 import fr.supercomete.head.GameUtils.HistoricData;
 import fr.supercomete.head.GameUtils.Scenarios.Compatibility;
 import fr.supercomete.head.GameUtils.Scenarios.CompatibilityType;
+import fr.supercomete.head.GameUtils.Time.TimeUtility;
+import fr.supercomete.head.GameUtils.WinCondition;
 import fr.supercomete.head.PlayerUtils.EffectNullifier;
 import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.role.Bonus.Bonus;
 import fr.supercomete.head.role.Bonus.BonusType;
+import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.RoleHandler;
+import fr.supercomete.head.structure.Structure;
+import fr.supercomete.head.structure.StructureHandler;
+import fr.supercomete.head.world.scoreboardmanager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,9 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import roilionuhc.roilionuhc.role.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.Level;
 
 
@@ -81,6 +85,75 @@ public class RLUHC extends Mode implements CampMode, Command {
 
     @Override
     public boolean WinCondition() {
+        if(RoleHandler.IsRoleGenerated()) {
+            if(RoleHandler.getRoleList().size()== 0 ) {
+                scoreboardmanager.titlemessage("Victoire de la §4Mort");
+                return true;
+            }
+            boolean rlcamp=false;
+            boolean hyennes=false;
+            boolean Duo_Rani_Kion=false;
+            boolean scar=false;
+            boolean rejected=false;
+            boolean neutral=false;
+            for(Map.Entry<UUID,Role> entry:RoleHandler.getRoleList().entrySet()){
+                KasterBorousCamp camps = entry.getValue().getCamp();
+                if(camps==RLTeams.LionEarth){
+                    rlcamp=true;
+                }
+                if(camps==RLTeams.Hyennes){
+                    hyennes=true;
+                }
+                if(camps==RLTeams.Duo_Rani_Kion){
+                    Duo_Rani_Kion=true;
+                }
+                if(camps==RLTeams.Scar){
+                    scar=true;
+                }
+                if(camps==RLTeams.Rejected){
+                    rejected=true;
+                }
+                if(camps==RLTeams.Solo){
+                    neutral=true;
+                }
+            }
+            if(rlcamp&&!hyennes&&!Duo_Rani_Kion&&!scar&&!rejected&&!neutral){
+                scoreboardmanager.titlemessage("Victoire de la "+RLTeams.LionEarth.getColoredName());
+                Bukkit.broadcastMessage("   Victoire de la "+RLTeams.LionEarth.getColoredName());
+                return true;
+            }
+            if(!rlcamp&&hyennes&&!Duo_Rani_Kion&&!scar&&!rejected&&!neutral){
+                scoreboardmanager.titlemessage("Victoire: "+RLTeams.Hyennes.getColoredName());
+                Bukkit.broadcastMessage("   Victoire: "+RLTeams.Hyennes.getColoredName());
+                return true;
+            }
+            if(!rlcamp&&!hyennes&&Duo_Rani_Kion&&!scar&&!rejected&&!neutral){
+                scoreboardmanager.titlemessage("Victoire du "+RLTeams.Duo_Rani_Kion.getColoredName());
+                Bukkit.broadcastMessage("   Victoire du "+RLTeams.Duo_Rani_Kion.getColoredName());
+                return true;
+            }
+            if(!rlcamp&&!hyennes&&!Duo_Rani_Kion&&scar&&!rejected&&!neutral){
+                scoreboardmanager.titlemessage("Victoire du "+RLTeams.Scar.getColoredName());
+                Bukkit.broadcastMessage("   Victoire de "+RLTeams.Scar.getColoredName());
+                return true;
+            }
+            if(!rlcamp&&!hyennes&&!Duo_Rani_Kion&&!scar&&rejected&&!neutral){
+                scoreboardmanager.titlemessage("Victoire du "+RLTeams.Rejected.getColoredName());
+                Bukkit.broadcastMessage("   Victoire de "+RLTeams.Rejected.getColoredName());
+                return true;
+            }
+            if(!rlcamp&&!hyennes&&!Duo_Rani_Kion&&!scar&&!rejected&&neutral){
+                if(RoleHandler.getRoleList().size()==1){
+                    Role role = (Role) RoleHandler.getRoleList().values().toArray()[0];
+                    scoreboardmanager.titlemessage("Victoire de §f"+role.getName());
+                    Bukkit.broadcastMessage("   Victoire de §f"+role.getName());
+                    return true;
+                }else{
+                    return false;
+                }
+
+            }
+        }
         return false;
     }
 
@@ -102,7 +175,7 @@ public class RLUHC extends Mode implements CampMode, Command {
                         ed.crie = true;
                         player.sendMessage("§7Tous les joueurs dans un rayon de 50blocs ont perdu leurs effets.");
                         for (Player other : Bukkit.getOnlinePlayers()) {
-                            if (RoiLionUHC.api.getGameProvider().getPlayerList().contains(other.getUniqueId())&& RoiLionUHC.api.getRoleProvider().getRoleOf(other).getCamp()!=RLTeams.Hyennes) {
+                            if (RoiLionUHC.api.getGameProvider().getPlayerList().contains(other.getUniqueId()) && RoiLionUHC.api.getRoleProvider().getRoleOf(other).getCamp() != RLTeams.Hyennes) {
                                 RoiLionUHC.api.getPotionEffectProvider().applyPotionEffect(other, KTBSEffect.getNullifer(20 * 8, new ArrayList<>(), EffectNullifier.Type.WHITELIST));
                             }
                         }
@@ -192,6 +265,75 @@ public class RLUHC extends Mode implements CampMode, Command {
         }, new SubCommand() {
             @Override
             public String subCommand() {
+                return "tp";
+            }
+
+            @Override
+            public boolean execute(Player player, String[] strings) {
+                final Role role = RoiLionUHC.api.getRoleProvider().getRoleOf(player);
+                if (role instanceof Banzai) {
+                    Banzai banzai = (Banzai) role;
+                    int[][] array = new int[][]{{10, 7, 20}, {36, 7, 27}, {6, 7, 40}, {34, 7, 4}, {54, 14, 27}, {37, 13, 42}};
+                    Random random = new Random(System.currentTimeMillis());
+                    if (!banzai.used) {
+                        ArrayList<UUID> tpedplayers = new ArrayList<>();
+                        ArrayList<Player> totp = new ArrayList<>();
+                        for (final Player other : Bukkit.getOnlinePlayers()) {
+                            if (RoiLionUHC.api.getPlayerHelper().IsPlayerAlive(other.getUniqueId())) {
+                                if (other.getLocation().distance(player.getLocation()) < 50) {
+                                    totp.add(other);
+                                    tpedplayers.add(other.getUniqueId());
+                                }
+                            }
+                        }
+                        Structure structure = getStructure().get(0);
+                        for (Player p : totp) {
+                            p.teleport(structure.getPositionRelativeToLocation(array[random.nextInt(array.length)]));
+                        }
+                        new BukkitRunnable() {
+                            int cage_duration = 90;
+
+                            @Override
+                            public void run() {
+                                cage_duration--;
+                                if (cage_duration <= 0) {
+                                    ArrayList<UUID> to_remove = new ArrayList<>();
+                                    for (UUID UUID : tpedplayers) {
+                                        Player tped = Bukkit.getPlayer(UUID);
+                                        if (tped != null && tped.isOnline()) {
+                                            to_remove.add(UUID);
+                                            RoiLionUHC.api.getMapProvider().getMap().PlayerRandomTPMap(tped, 30);
+                                        }
+                                    }
+                                    tpedplayers.removeAll(to_remove);
+                                } else {
+                                    for (UUID UUID : tpedplayers) {
+                                        Player tped = Bukkit.getPlayer(UUID);
+                                        if (tped != null && tped.isOnline()) {
+                                            RoiLionUHC.api.getPlayerHelper().sendActionBarMessage(tped, "§cTemps restant: " + TimeUtility.transform(cage_duration, "§6"));
+                                        }
+                                    }
+                                }
+                                if (tpedplayers.size() == 0) {
+                                    cancel();
+                                }
+                            }
+                        }.runTaskTimer(RoiLionUHC.INSTANCE, 0, 20L);
+                        banzai.used = true;
+                    } else {
+                        player.sendMessage("§cVous avez déjà utilisé ce pouvoir.");
+                    }
+                }
+                return true;
+            }
+
+            @Override
+            public String subCommandDescription() {
+                return "Utilisable par Banzai uniquement.";
+            }
+        }, new SubCommand() {
+            @Override
+            public String subCommand() {
                 return "coord";
             }
 
@@ -248,7 +390,7 @@ public class RLUHC extends Mode implements CampMode, Command {
                     if (!sarabi.exchange) {
                         sarabi.exchange = true;
                         sarabi.addBonus(new Bonus(BonusType.Heart, -4));
-                        player.sendMessage("Simba est "+RoiLionUHC.api.getRoleProvider().FormalizedWhoHaveRole(Simba.class));
+                        player.sendMessage("Simba est " + RoiLionUHC.api.getRoleProvider().FormalizedWhoHaveRole(Simba.class));
                     }
                 }
                 return true;
@@ -266,18 +408,18 @@ public class RLUHC extends Mode implements CampMode, Command {
 
             @Override
             public boolean execute(Player player, String[] strings) {
-                if(RoiLionUHC.api.getPlayerHelper().IsPlayerAlive(player.getUniqueId())){
+                if (RoiLionUHC.api.getPlayerHelper().IsPlayerAlive(player.getUniqueId())) {
                     final Role role = RoiLionUHC.api.getRoleProvider().getRoleOf(player);
-                    if(role instanceof Kion){
-                        final Kion kion = (Kion)role;
-                        if(kion.coolDown.getUtilisation()>0){
-                            if(kion.coolDown.isAbleToUse()){
+                    if (role instanceof Kion) {
+                        final Kion kion = (Kion) role;
+                        if (kion.coolDown.getUtilisation() > 0) {
+                            if (kion.coolDown.isAbleToUse()) {
                                 kion.coolDown.setUseNow();
                                 kion.coolDown.addUtilisation(-1);
-                                kion.remaning_time=15*60;
+                                kion.remaning_time = 15 * 60;
                                 player.sendMessage("§7Vous êtes invisible pour les 15 prochaines minutes.");
-                            }else player.sendMessage("§7Vous ne pouvez pas utiliser cette capacité.");
-                        }else player.sendMessage("§7Vous avez atteint le maximum d'utilisation de cette capacité.");
+                            } else player.sendMessage("§7Vous ne pouvez pas utiliser cette capacité.");
+                        } else player.sendMessage("§7Vous avez atteint le maximum d'utilisation de cette capacité.");
                     }
                 }
                 return true;
@@ -286,6 +428,94 @@ public class RLUHC extends Mode implements CampMode, Command {
             @Override
             public String subCommandDescription() {
                 return "Utilisable uniquement par Kion";
+            }
+        }, new SubCommand() {
+            @Override
+            public String subCommand() {
+                return "infect";
+            }
+
+            @Override
+            public boolean execute(Player player, String[] strings) {
+                Role role = RoleHandler.getRoleOf(player);
+                if (role instanceof Vitani) {
+                    Vitani vitani = (Vitani) role;
+                    if (vitani.target == null) {
+                        if (strings.length > 0) {
+                            String args = strings[0];
+                            Player target = Bukkit.getPlayer(args);
+                            if (target == null || !RoiLionUHC.api.getPlayerHelper().IsPlayerAlive(target.getUniqueId())) {
+                                player.sendMessage("§cCe joueur n'est pas en ligne ou déjà mort.");
+                                return true;
+                            }
+                            if (target.getUniqueId() == player.getUniqueId()) {
+                                player.sendMessage("§cVous ne pouvez pas être la cible de cette commande.");
+                                return true;
+                            }
+                            vitani.target = target.getUniqueId();
+                        } else {
+                            player.sendMessage("§cUsage: /rlu infect <Joueur>");
+                        }
+                    }
+                }
+                return true;
+            }
+
+            @Override
+            public String subCommandDescription() {
+                return "Utilisable uniquement par Vitani";
+            }
+        }, new SubCommand() {
+            @Override
+            public String subCommand() {
+                return "coco";
+            }
+
+            @Override
+            public boolean execute(Player player, String[] strings) {
+                Role role = RoiLionUHC.api.getRoleProvider().getRoleOf(player);
+                if (role instanceof Rafiki) {
+                    Rafiki rafiki = (Rafiki) role;
+                }
+                return true;
+            }
+
+            @Override
+            public String subCommandDescription() {
+                return "Utilisable uniquement par Rafiki";
+            }
+        }, new SubCommand() {
+            @Override
+            public String subCommand() {
+                return "choix";
+            }
+
+            @Override
+            public boolean execute(Player player, String[] strings) {
+                Role role =RoleHandler.getRoleOf(player);
+                if(role instanceof Rafiki){
+                    Rafiki rafiki = (Rafiki) role;
+                    if (strings.length > 0) {
+                        String args = strings[0];
+                        Player target = Bukkit.getPlayer(args);
+                        if (target == null || !RoiLionUHC.api.getPlayerHelper().IsPlayerAlive(target.getUniqueId())) {
+                            player.sendMessage("§cCe joueur n'est pas en ligne ou déjà mort.");
+                            return true;
+                        }
+                        if (target.getUniqueId() == player.getUniqueId()) {
+                            player.sendMessage("§cVous ne pouvez pas être la cible de cette commande.");
+                            return true;
+                        }
+                        player.sendMessage("§aVotre nouvelle cible est §6"+target.getName());
+                        rafiki.targeted=target.getUniqueId();
+                    }
+                }
+                return true;
+            }
+
+            @Override
+            public String subCommandDescription() {
+                return "Utilisable uniquement par Rafiki";
             }
         });
         return command;

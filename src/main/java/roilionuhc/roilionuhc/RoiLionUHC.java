@@ -1,8 +1,11 @@
 package roilionuhc.roilionuhc;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
+import fr.supercomete.head.core.Main;
+import fr.supercomete.head.structure.Structure;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import roilionuhc.roilionuhc.role.*;
+import java.util.ArrayList;
 public final class RoiLionUHC extends JavaPlugin {
     public static KtbsAPI api;
     public static RoiLionUHC INSTANCE;
@@ -11,6 +14,8 @@ public final class RoiLionUHC extends JavaPlugin {
         INSTANCE=this;
         api = Bukkit.getServicesManager().load(KtbsAPI.class);
         RLUHC uhc = new RLUHC();
+        Bukkit.getServer().getPluginManager().registerEvents(new BlockPlaceAndDestroyEvent(),this);
+        Bukkit.getServer().getPluginManager().registerEvents(new CocoGUI(),this);
         api.getModeProvider().registerMode(uhc);
         api.getRoleProvider().registerRole(uhc, Simba.class);
         api.getRoleProvider().registerRole(uhc, Shenzi.class);
@@ -30,6 +35,13 @@ public final class RoiLionUHC extends JavaPlugin {
         uhc.RegisterRole(Kion.class);
         uhc.RegisterRole(Rani.class);
         uhc.RegisterRole(Fauve.class);
+        uhc.RegisterRole(Vitani.class);
+        uhc.RegisterRole(Nuka.class);
+        uhc.RegisterRole(Zira.class);
+        uhc.RegisterRole(Rafiki.class);
+        ArrayList<Structure> structures = new ArrayList<>();
+        structures.add(Main.structurehandler.extractStructure(this.getClass(),"banzai"));
+        uhc.setStructure(structures);
     }
 
     @Override

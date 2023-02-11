@@ -113,7 +113,6 @@ public class Simba extends Role implements Trigger_WhileAnyTime, Trigger_OnAnyKi
     @Override
     public void onOtherKill(Player player, Player player1) {
         Role role = RoleHandler.getRoleOf(player);
-        Bukkit.getLogger().log(Level.INFO,role.getName()+"");
         if(role instanceof Mufasa){
             Player ths = Bukkit.getPlayer(getOwner());
             ths.sendMessage("Mufasa est mort. Son tueur est "+player.getName());

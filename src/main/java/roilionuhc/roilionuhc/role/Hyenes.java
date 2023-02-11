@@ -3,6 +3,8 @@ package roilionuhc.roilionuhc.role;
 import fr.supercomete.head.PlayerUtils.KTBSEffect;
 import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
+import fr.supercomete.head.role.RoleModifier.HasAdditionalInfo;
+import fr.supercomete.head.role.RoleModifier.PreAnnouncementExecute;
 import fr.supercomete.head.role.Triggers.Trigger_WhileNight;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,11 +12,10 @@ import org.bukkit.potion.PotionEffectType;
 import roilionuhc.roilionuhc.RLTeams;
 import roilionuhc.roilionuhc.RoiLionUHC;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-public class Hyenes extends Role implements Trigger_WhileNight {
+public class Hyenes extends Role implements Trigger_WhileNight, PreAnnouncementExecute , HasAdditionalInfo {
+    UUID id;
     public Hyenes(UUID owner) {
         super(owner);
     }
@@ -59,5 +60,28 @@ public class Hyenes extends Role implements Trigger_WhileNight {
     @Override
     public void WhileNight(Player player) {
         RoiLionUHC.api.getPotionEffectProvider().applyPotionEffect(player,new KTBSEffect(PotionEffectType.INCREASE_DAMAGE,0,20*3));
+    }
+
+    @Override
+    public void PreAnnouncement() {
+        UUID banzai = RoiLionUHC.api.getRoleProvider().getWhoHaveRole(Banzai.class);
+        UUID ed = RoiLionUHC.api.getRoleProvider().getWhoHaveRole(Banzai.class);
+        UUID Shenzi = RoiLionUHC.api.getRoleProvider().getWhoHaveRole(Banzai.class);
+        ArrayList<UUID> ids = new ArrayList<>();
+        if(banzai!=null){
+            ids.add(banzai);
+        }
+        if(ed!=null){
+            ids.add(ed);
+        }
+        if(Shenzi!=null){
+            ids.add(Shenzi);
+        }
+        id = ids.get(ids.size()==1?0:new Random().nextInt(ids.size()));
+    }
+
+    @Override
+    public String[] getAdditionnalInfo() {
+        return new String[]{"Vous connaissez Ed,Shenzi ou Banzai: "+RoiLionUHC.api.getPlayerHelper().getNameFromUUID(id)};
     }
 }
