@@ -78,7 +78,8 @@ public class Kovu extends Role implements Trigger_WhileNight, PreAnnouncementExe
         UUID kiara= RoiLionUHC.api.getRoleProvider().getWhoHaveRole(Kiara.class);
         UUID scar= RoiLionUHC.api.getRoleProvider().getWhoHaveRole(Scar.class);
         Player player = Bukkit.getPlayer(getOwner());
-        if(killed instanceof Vitani){
+        Role role = RoleHandler.getRoleOf(killed);
+        if(role instanceof Vitani){
             if(RLTeams.Rejected==getCamp()){
                 if(kiara==null){
                     if(scar!=null){
@@ -92,16 +93,16 @@ public class Kovu extends Role implements Trigger_WhileNight, PreAnnouncementExe
                         player.sendMessage("§cVitani est morte, vous devez donc gagner avec §aLa Terre des Lions avec Kiara.");
                     }
                     this.setCamp(RLTeams.LionEarth);
-                    for(final Role role : RoleHandler.getRoleList().values()){
-                        if(role instanceof Kiara){
-                            ((Kiara)role).kovu=owner_;
-                            Player player_kiara = Bukkit.getPlayer(role.getOwner());
+                    for(final Role r : RoleHandler.getRoleList().values()){
+                        if(r instanceof Kiara){
+                            ((Kiara)r).kovu=owner_;
+                            Player player_kiara = Bukkit.getPlayer(r.getOwner());
                             player_kiara.sendMessage("§aKovu est passé dans votre Camp. L'identité de Kovu est "+owner_);
                         }
                     }
                 }
             }
-        }else if(killed instanceof Kiara){
+        }else if(role instanceof Kiara){
             if(RLTeams.LionEarth==getCamp()){
                 if(scar!=null){
                     if(player!=null && player.isOnline()){
@@ -110,7 +111,7 @@ public class Kovu extends Role implements Trigger_WhileNight, PreAnnouncementExe
                     this.setCamp(RLTeams.Scar);
                 }
             }
-        }else if(killed instanceof Scar){
+        }else if(role instanceof Scar){
             if(RLTeams.Scar==getCamp()){
                 addBonus(new Bonus(BonusType.Heart,4));
                 if(player!=null && player.isOnline()){

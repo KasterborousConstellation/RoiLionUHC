@@ -1,5 +1,6 @@
 package roilionuhc.roilionuhc;
 
+import fr.supercomete.enums.Gstate;
 import fr.supercomete.head.GameUtils.Command.KasterborousCommand;
 import fr.supercomete.head.GameUtils.Command.ModeCommand;
 import fr.supercomete.head.GameUtils.Command.SubCommand;
@@ -23,6 +24,7 @@ import fr.supercomete.head.role.RoleHandler;
 import fr.supercomete.head.structure.Structure;
 import fr.supercomete.head.structure.StructureHandler;
 import fr.supercomete.head.world.scoreboardmanager;
+import fr.supercomete.tasks.NoDamage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -273,7 +275,7 @@ public class RLUHC extends Mode implements CampMode, Command {
                 final Role role = RoiLionUHC.api.getRoleProvider().getRoleOf(player);
                 if (role instanceof Banzai) {
                     Banzai banzai = (Banzai) role;
-                    int[][] array = new int[][]{{10, 7, 20}, {36, 7, 27}, {6, 7, 40}, {34, 7, 4}, {54, 14, 27}, {37, 13, 42}};
+                    int[][] array = new int[][]{{10, 2, 20}, {36, 2, 27}, {6, 2, 40}, {34, 2, 4}, {54, 9, 27}, {37, 8, 42}};
                     Random random = new Random(System.currentTimeMillis());
                     if (!banzai.used) {
                         ArrayList<UUID> tpedplayers = new ArrayList<>();
@@ -287,6 +289,12 @@ public class RLUHC extends Mode implements CampMode, Command {
                             }
                         }
                         Structure structure = getStructure().get(0);
+                        ArrayList<UUID> uuidArrayList = new ArrayList<>();
+                        for(Player player1:totp){
+                            uuidArrayList.add(player1.getUniqueId());
+                        }
+                        NoDamage noDamage = new NoDamage(3,uuidArrayList);
+                        noDamage.runTaskTimer(RoiLionUHC.INSTANCE,0,20L);
                         for (Player p : totp) {
                             p.teleport(structure.getPositionRelativeToLocation(array[random.nextInt(array.length)]));
                         }
@@ -302,7 +310,7 @@ public class RLUHC extends Mode implements CampMode, Command {
                                         Player tped = Bukkit.getPlayer(UUID);
                                         if (tped != null && tped.isOnline()) {
                                             to_remove.add(UUID);
-                                            RoiLionUHC.api.getMapProvider().getMap().PlayerRandomTPMap(tped, 30);
+                                            RoiLionUHC.api.getMapProvider().getMap().PlayerRandomTPMap(tped, 10);
                                         }
                                     }
                                     tpedplayers.removeAll(to_remove);
@@ -314,7 +322,7 @@ public class RLUHC extends Mode implements CampMode, Command {
                                         }
                                     }
                                 }
-                                if (tpedplayers.size() == 0) {
+                                if (tpedplayers.size() == 0 ||RoiLionUHC.api.getGameProvider().getCurrentGame().getGamestate()== Gstate.Waiting) {
                                     cancel();
                                 }
                             }
@@ -476,6 +484,7 @@ public class RLUHC extends Mode implements CampMode, Command {
                 Role role = RoiLionUHC.api.getRoleProvider().getRoleOf(player);
                 if (role instanceof Rafiki) {
                     Rafiki rafiki = (Rafiki) role;
+                    new CocoGUI(player,rafiki).open();
                 }
                 return true;
             }

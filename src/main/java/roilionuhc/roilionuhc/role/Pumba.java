@@ -84,7 +84,7 @@ public class Pumba extends Role implements HasAdditionalInfo,Trigger_WhileAnyTim
                 for(Player other : Bukkit.getOnlinePlayers()){
                     if(RoiLionUHC.api.getPlayerHelper().IsPlayerInGame(other.getUniqueId())){
                         if(RoleHandler.getRoleOf(other) instanceof Timon){
-                            RoiLionUHC.api.getPotionEffectProvider().applyPotionEffect(player,new KTBSEffect(PotionEffectType.INCREASE_DAMAGE,0,2*60*20));
+                            RoiLionUHC.api.getPotionEffectProvider().applyPotionEffect(other,new KTBSEffect(PotionEffectType.INCREASE_DAMAGE,0,2*60*20));
                             other.sendMessage("§7Pumba vient d'activer §aHakuna Matata§7 vous avez donc l'effet force pendant 2minutes.");
                         }
                     }
