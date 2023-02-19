@@ -55,7 +55,7 @@ public class Vitani extends Role implements Trigger_WhileNight, Trigger_WhileAny
 
     @Override
     public boolean AskIfUnique() {
-        return false;
+        return true;
     }
 
     @Override

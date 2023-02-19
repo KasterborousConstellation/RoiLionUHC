@@ -1,12 +1,13 @@
 package roilionuhc.roilionuhc;
 import fr.supercomete.head.GameUtils.GameMode.ModeHandler.KtbsAPI;
+import fr.supercomete.head.GameUtils.GameMode.ModeModifier.Groupable;
 import fr.supercomete.head.core.Main;
 import fr.supercomete.head.structure.Structure;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import roilionuhc.roilionuhc.role.*;
 import java.util.ArrayList;
-public final class RoiLionUHC extends JavaPlugin {
+public final class RoiLionUHC extends JavaPlugin implements Groupable {
     public static KtbsAPI api;
     public static RoiLionUHC INSTANCE;
     @Override

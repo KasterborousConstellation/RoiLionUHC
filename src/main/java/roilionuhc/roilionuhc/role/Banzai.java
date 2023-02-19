@@ -43,7 +43,7 @@ public class Banzai extends Role implements Trigger_WhileAnyTime, Trigger_WhileN
         return Arrays.asList(
                 "Lorsque vous passez a coté de Shenzi pour la première fois vous obtenez l'effet résistance permanent.",
                 "Vous avez la commande /rlu tp qui vous permet de téléporter tout les joueurs dans un rayon de 50blocs dans votre cimetière.",
-                "Au bout de 2min 30 tous les joueurs vivants dans votre cimetière seront retéléporter dans sur la map.",
+                "Au bout de 1min 30 tous les joueurs vivants dans votre cimetière seront retéléporter dans sur la map.",
                 "Vous avez l'effet §cforce§7 durant la nuit."
         );
     }
@@ -68,7 +68,7 @@ public class Banzai extends Role implements Trigger_WhileAnyTime, Trigger_WhileN
         if(!passed) {
             for (final Player other : Bukkit.getOnlinePlayers()) {
                 if (player.getUniqueId() != other.getUniqueId() && RoiLionUHC.api.getGameProvider().getPlayerList().contains(other.getUniqueId())) {
-                    if (other.getLocation().distance(player.getLocation()) < 5) {
+                    if (RoiLionUHC.api.getCoordinateHelper().Distance(other,player) < 5) {
                         Role role = RoiLionUHC.api.getRoleProvider().getRoleOf(other);
                         if (role instanceof Shenzi) {
                             passed = true;

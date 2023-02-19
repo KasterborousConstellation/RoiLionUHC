@@ -64,7 +64,7 @@ public class Shenzi extends Role implements HasAdditionalInfo, Trigger_WhileAnyT
 
     @Override
     public String[] getAdditionnalInfo() {
-        return new String[]{"Vous connaissez l'identité de Banzai et Ed: "+ RoleHandler.FormalizedGetWhoHaveRole(Ed.class)+","+" "+RoleHandler.FormalizedGetWhoHaveRole(Banzai.class)};
+        return new String[]{"Vous connaissez l'identité de Banzai et Ed: "+ RoleHandler.FormalizedGetWhoHaveRole(Banzai.class)+","+" "+RoleHandler.FormalizedGetWhoHaveRole(Ed.class)};
     }
 
     @Override

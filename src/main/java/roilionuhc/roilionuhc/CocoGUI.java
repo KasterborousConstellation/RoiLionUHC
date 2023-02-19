@@ -40,12 +40,6 @@ public class CocoGUI extends GUI {
     }
     protected Inventory generateinv() {
         Inventory tmp = Bukkit.createInventory(null, 9,"Rafiki");
-        for(int e=0;e<9;e++) {
-            tmp.setItem(e, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-        }
-        for(int r=45;r<54;r++) {
-            tmp.setItem(r, InventoryUtils.createColorItem(Material.STAINED_GLASS_PANE, " ", 1, (short)2));
-        }
         ItemStack orange = InventoryUtils.createColorItem(Material.INK_SACK,"Orange",1,(short) 14);
         ItemMeta meta = orange.getItemMeta();
         meta.setLore(Collections.singletonList("§r§c10% de vitesse pendant 30s."));

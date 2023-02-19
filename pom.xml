@@ -10,12 +10,10 @@
     <packaging>jar</packaging>
 
     <name>RoiLionUHC</name>
-
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -73,7 +71,7 @@
         <dependency>
             <groupId>KasterborousUHC</groupId>
             <artifactId>KasterborousUHC</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>[1.0,)</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

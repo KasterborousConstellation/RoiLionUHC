@@ -53,7 +53,7 @@ public class Nuka extends Role implements Trigger_WhileAnyTime {
 
     @Override
     public boolean AskIfUnique() {
-        return false;
+        return true;
     }
 
     @Override

@@ -7,18 +7,17 @@ import fr.supercomete.head.role.KasterBorousCamp;
 import fr.supercomete.head.role.Role;
 import fr.supercomete.head.role.Triggers.Trigger_WhileAnyTime;
 import fr.supercomete.head.role.Triggers.Trigger_WhileDay;
+import fr.supercomete.head.role.Triggers.Trigger_WhileNight;
 import fr.supercomete.head.role.Triggers.Trigger_onEpisodeTime;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import roilionuhc.roilionuhc.RLTeams;
 import roilionuhc.roilionuhc.RoiLionUHC;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-public class Zira extends Role implements Trigger_onEpisodeTime, Trigger_WhileAnyTime , Trigger_WhileDay {
+public class Zira extends Role implements Trigger_onEpisodeTime, Trigger_WhileAnyTime , Trigger_WhileDay, Trigger_WhileNight {
     boolean given= false;
     public Zira(UUID owner) {
         super(owner);
@@ -53,7 +52,7 @@ public class Zira extends Role implements Trigger_onEpisodeTime, Trigger_WhileAn
 
     @Override
     public boolean AskIfUnique() {
-        return false;
+        return true;
     }
 
     @Override
@@ -93,5 +92,10 @@ public class Zira extends Role implements Trigger_onEpisodeTime, Trigger_WhileAn
         if(given){
             RoiLionUHC.api.getPotionEffectProvider().applyPotionEffect(player,new KTBSEffect(PotionEffectType.INCREASE_DAMAGE,0,20*3));
         }
+    }
+
+    @Override
+    public void WhileNight(Player player) {
+        RoiLionUHC.api.getPotionEffectProvider().applyPotionEffect(player,new KTBSEffect(PotionEffectType.DAMAGE_RESISTANCE,0,20*3));
     }
 }
